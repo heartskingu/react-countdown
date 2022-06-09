@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "./App.css";
+import Button from "./components/button";
+import CountdownTimer from "./components/countdown-timer";
+import List from "./components/list";
 
 function App() {
   const [timerInput, setTimerInput] = useState("00:00:00");
@@ -11,31 +14,6 @@ function App() {
     ev.preventDefault();
     setTimerList((oldList) => [...oldList, timerInput]);
     setTimerInput("00:00:00");
-  }
-
-  function timeToSeconds(time: string) {
-    const [hours = "0", minutes = "0", seconds = "0"] = time.split(":");
-    const hoursInSeconds = Number(hours) * 3600;
-    const minutesInSeconds = Number(minutes) * 60;
-    return hoursInSeconds + minutesInSeconds + Number(seconds);
-  }
-
-  function startCountdown() {
-    if (!selectedTimer) return;
-
-    let seconds = timeToSeconds(selectedTimer);
-    setRunningTimer(
-      setInterval(() => {
-        if (seconds-- > 0) {
-          const hour = String(Math.floor(seconds / 360)).padStart(2, "0");
-          const min = String(Math.floor(seconds / 60)).padStart(2, "0");
-          const sec = String(seconds % 60).padStart(2, "0");
-          setSelectedTimer(`${hour}:${min}:${sec}`);
-        } else {
-          clearInterval(runningTimer);
-        }
-      }, 1000)
-    );
   }
 
   return (
@@ -51,28 +29,21 @@ function App() {
             value={timerInput}
             onChange={(event) => setTimerInput(event.target.value)}
           />
-          <button type="submit">Add</button>
+          <Button type="submit">Add</Button>
         </form>
-        <ul>
-          {timerList.map((item, index) => (
-            <li
-              key={index}
-              onClick={() => {
-                if (runningTimer) clearInterval(runningTimer);
-                setSelectedTimer(item);
-              }}
-            >
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
+        <List
+          timerList={timerList}
+          runningTimer={runningTimer}
+          setSelectedTimer={setSelectedTimer}
+        ></List>
       </section>
       <section className="countdown-timer">
-        <div>
-          <span>{selectedTimer}</span>
-        </div>
-        <button onClick={() => startCountdown()}>Start</button>
-        <button onClick={() => clearInterval(runningTimer)}>Pause</button>
+        <CountdownTimer
+          selectedTimer={selectedTimer}
+          setSelectedTimer={setSelectedTimer}
+          runningTimer={runningTimer}
+          setRunningTimer={setRunningTimer}
+        />
       </section>
     </div>
   );
