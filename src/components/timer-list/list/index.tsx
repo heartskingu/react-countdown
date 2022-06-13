@@ -1,4 +1,4 @@
-import { Props } from "../../common/interfaces/props";
+import { Props } from "../../../common/interfaces/props";
 import ListItem from "./list-item";
 
 interface ListProps extends Props {

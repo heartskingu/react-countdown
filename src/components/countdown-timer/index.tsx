@@ -35,6 +35,8 @@ export default function CountdownTimer({
     );
   }
 
+  console.count("Render: ");
+
   return (
     <div>
       <div>
